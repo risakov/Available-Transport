@@ -5,12 +5,13 @@ local scene = composer.newScene()
 local backObject = display.newGroup()
 local frontObject = display.newGroup()
 
-
+local url = "http://192.168.43.246:8081"
 local function showAuth()
 
 	local sceneGroup = scene.view
-	scene.logo = display.newCircle( frontObject, CenterX, CenterY*0.4, Width*0.15)
-	scene.logo:setFillColor(0.2,0.3,1)
+	scene.logo = display.newImageRect(frontObject,"Images/dt.png",Width*0.4,Width*0.3)
+	scene.logo.x = CenterX
+	scene.logo.y = Height * 0.2
 
 	scene.fieldInputNameBack = display.newImageRect("Images/rectRounded1.png",Width*0.6,Height * 0.05)
 	scene.fieldInputNameBack.x = CenterX
@@ -35,7 +36,22 @@ local function showAuth()
 	})
 	scene.textName:setFillColor(0,0,0)
 	scene.textName.align = "left"
+
+	scene.vk = display.newImageRect(frontObject,"Images/vk.png",Width*0.1,Width*0.1)
+	scene.vk.x = CenterX*0.52
+	scene.vk.y = CenterY*1.2
+
+	scene.fc = display.newImageRect(frontObject,"Images/facebook.png",Width*0.1,Width*0.1)
+	scene.fc.x = CenterX*0.82
+	scene.fc.y = CenterY*1.2
+
+	scene.google = display.newImageRect(frontObject,"Images/google.png",Width*0.1,Width*0.1)
+	scene.google.x = CenterX*1.12
+	scene.google.y = CenterY*1.2
 	
+	scene.yandex = display.newImageRect(frontObject,"Images/yandex.png",Width*0.1,Width*0.1)
+	scene.yandex.x = CenterX*1.42
+	scene.yandex.y = CenterY*1.2
 	--------------------------------------------------------------------------------------------------
 
 	scene.fieldInputBack = display.newImageRect(frontObject,"Images/rectRounded1.png",Width*0.6,Height * 0.05)
@@ -88,7 +104,26 @@ local function showAuth()
 	       			if (phone ~= "" and name ~= "") then
 	       				User.name = name
 	       				User.number = phone
-	       				composer.gotoScene("Scenes.Main")
+							 
+						local headers = {}
+							  
+						headers["Content-Type"] = "application/json"
+							  
+						local params = {}
+						params.headers = headers
+						params.body = ("{\"name\":\"%s\",\"phone\":\"%s\"}"):format(name,phone)
+						print("body" .. params.body)
+
+						network.request( url.."/user/add", "POST", function(event)
+							if ( event.isError ) then
+							    print( "Network error: ", event.response )
+							else
+							    print ( "RESPONSE: " .. event.response )
+							    local validate = tonumber(event.response)
+
+							end
+						end, params )
+						composer.gotoScene("Scenes.Main")
 	       			end
 	   			end
 	        end,

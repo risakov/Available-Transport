@@ -17,7 +17,7 @@ local function showPeople()
 	
 	scene.textInfo = display.newText({
 		parent = frontObject,
-	    text = "Водители",     
+	    text = "Участники",     
 	    x = CenterX,
 	    y = Height*0.1, 
 	    width = Width/4,
