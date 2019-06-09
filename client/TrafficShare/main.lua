@@ -12,7 +12,7 @@ local userClass = require("Classes.User")
 _G.User = userClass:new({name = "Роман", number = "2141 ",image = "Images/roma.png"})
 local composer = require("composer")
 
-composer.gotoScene("Scenes.Main")
+composer.gotoScene("Scenes.Authorization")
 
 
 

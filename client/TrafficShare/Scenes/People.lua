@@ -20,7 +20,7 @@ local function showPeople()
 	    text = "Участники",     
 	    x = CenterX,
 	    y = Height*0.1, 
-	    width = Width/4,
+	    width = Width/3.95,
 	    font = native.systemFont,   
 	    fontSize = 42*ScaleFont,
 	    align = "left"  -- Alignment parameter

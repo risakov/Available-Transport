@@ -5,20 +5,42 @@ local scene = composer.newScene()
 local backObject = display.newGroup()
 local frontObject = display.newGroup()
 
-local url = "http://192.168.43.246:8081"
+
 local function showAuth()
 
 	local sceneGroup = scene.view
-	scene.logo = display.newImageRect(frontObject,"Images/dt.png",Width*0.4,Width*0.3)
+	--scene.logo = display.newCircle( frontObject, CenterX, CenterY*0.4, Width*0.15)
+	--scene.logo:setFillColor(0.2,0.3,1)
+	scene.logo = display.newImageRect(frontObject,"Images/dt.png",CenterX,CenterY*0.4,Width*0.2,Width*0.2)
+
 	scene.logo.x = CenterX
-	scene.logo.y = Height * 0.2
+	scene.logo.y = CenterY*0.4
 
 	scene.fieldInputNameBack = display.newImageRect("Images/rectRounded1.png",Width*0.6,Height * 0.05)
 	scene.fieldInputNameBack.x = CenterX
 	scene.fieldInputNameBack.y = CenterY*0.8
 
+	local function onUsername( event )
+	    if ( "began" == event.phase ) then
+	        -- This is the "keyboard appearing" event.
+	        -- In some cases you may want to adjust the interface while the keyboard is open.
+	 
+	    elseif ( "submitted" == event.phase ) then
+	        -- Automatically tab to password field if user clicks "Return" on virtual keyboard.
+	        native.setKeyboardFocus( scene.fieldInput )
+	    end
+	end
+	  
+	local function onPhone( event )
+	    -- Hide keyboard when the user clicks "Return" in this field
+	    if ( "submitted" == event.phase ) then
+	        native.setKeyboardFocus( nil )
+	    end
+	end
+
 	scene.fieldInputName = native.newTextField( CenterX, CenterY*0.8, Width*0.55, Height * 0.04 )
 	scene.fieldInputName.hasBackground  = false
+	scene.fieldInputName:addEventListener("userInput",onUsername)
 
 	scene.fieldInputName.Font = Font
 	scene.fieldInputName:resizeFontToFitHeight()
@@ -36,22 +58,7 @@ local function showAuth()
 	})
 	scene.textName:setFillColor(0,0,0)
 	scene.textName.align = "left"
-
-	scene.vk = display.newImageRect(frontObject,"Images/vk.png",Width*0.1,Width*0.1)
-	scene.vk.x = CenterX*0.52
-	scene.vk.y = CenterY*1.2
-
-	scene.fc = display.newImageRect(frontObject,"Images/facebook.png",Width*0.1,Width*0.1)
-	scene.fc.x = CenterX*0.82
-	scene.fc.y = CenterY*1.2
-
-	scene.google = display.newImageRect(frontObject,"Images/google.png",Width*0.1,Width*0.1)
-	scene.google.x = CenterX*1.12
-	scene.google.y = CenterY*1.2
 	
-	scene.yandex = display.newImageRect(frontObject,"Images/yandex.png",Width*0.1,Width*0.1)
-	scene.yandex.x = CenterX*1.42
-	scene.yandex.y = CenterY*1.2
 	--------------------------------------------------------------------------------------------------
 
 	scene.fieldInputBack = display.newImageRect(frontObject,"Images/rectRounded1.png",Width*0.6,Height * 0.05)
@@ -60,6 +67,7 @@ local function showAuth()
 
 	scene.fieldInput = native.newTextField( CenterX, CenterY, Width*0.55, Height * 0.04 )
 	scene.fieldInput.hasBackground  = false
+	scene.fieldInput:addEventListener("userInput",onPhone)
 
 	scene.fieldInput.Font = Font
 	scene.fieldInput:resizeFontToFitHeight()
@@ -84,7 +92,7 @@ local function showAuth()
 		parent = frontObject,
 	    text = "Зарегистрироваться",     
 	    x = display.contentCenterX,
-	    y = display.contentCenterY*1.53, 
+	    y = display.contentCenterY*1.52, 
 	    width = Width*0.6,
 	    height = Height * 0.05,
 	    font = native.systemFont,   
@@ -104,26 +112,7 @@ local function showAuth()
 	       			if (phone ~= "" and name ~= "") then
 	       				User.name = name
 	       				User.number = phone
-							 
-						local headers = {}
-							  
-						headers["Content-Type"] = "application/json"
-							  
-						local params = {}
-						params.headers = headers
-						params.body = ("{\"name\":\"%s\",\"phone\":\"%s\"}"):format(name,phone)
-						print("body" .. params.body)
-
-						network.request( url.."/user/add", "POST", function(event)
-							if ( event.isError ) then
-							    print( "Network error: ", event.response )
-							else
-							    print ( "RESPONSE: " .. event.response )
-							    local validate = tonumber(event.response)
-
-							end
-						end, params )
-						composer.gotoScene("Scenes.Main")
+	       				composer.gotoScene("Scenes.Main")
 	       			end
 	   			end
 	        end,
@@ -176,6 +165,7 @@ function scene:hide(event)
 end
 
 function scene:destroy(event)
+	frontObject:removeSelf()
 	scene.fieldInputName:removeSelf()
 	scene.fieldInput:removeSelf()
 

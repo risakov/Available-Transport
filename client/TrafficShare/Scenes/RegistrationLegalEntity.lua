@@ -5,8 +5,6 @@ local scene = composer.newScene()
 local backObject = display.newGroup()
 local frontObject = display.newGroup()
 
-local url = "http://192.168.43.246:8081"
-
 
 local function showAuthLegalEntity()
 	local sceneGroup = scene.view
@@ -137,7 +135,7 @@ local function showAuthLegalEntity()
 					params.body = ("{\"fullname\":\"%s\",\"phone'\":\"%s\",\"email\":\"%s\",\"corporation\":\"%s\"}"):format(fullname,phone,mail,corporation)
 					print("body" .. params.body)
 
-					network.request( url.."/entity/add", "POST", function(event)
+					network.request( "http://192.168.43.246:8081/entity/add", "POST", function(event)
 						if ( event.isError ) then
 						    print( "Network error: ", event.response )
 						else
@@ -148,11 +146,8 @@ local function showAuthLegalEntity()
 				scene.buttonSendForm:setFillColor(1,1,1)
 				scene.textSendForm:setFillColor(0,0,0)
 				scene.textSendForm.text = "Заявка успешно отправлена. С Вами свяжутся позже."
-				local function nextScene( event )
-				    composer.gotoScene("Scenes.Authorization")
-				end
-		  
-				timer.performWithDelay( 1000, nextScene )
+		    
+				timer.performWithDelay(1000,function(event) composer.gotoScene("Scenes.Authorization"); end)
 		    end,
 	        emboss = false,
 	        shape = "roundedRect",
@@ -231,11 +226,10 @@ function scene:hide(event)
 end
 
 function scene:destroy(event)
-	scene.fieldInputPhone:removeSelf()
-	scene.fieldInputMail:removeSelf()
-	scene.fieldInputCompany:removeSelf()
+	scene.fieldInputPhone:removeSelf() 
+	scene.fieldInputMail:removeSelf() 
+	scene.fieldInputCompany:removeSelf() 
 	scene.fieldInputFIO:removeSelf()
-
 end
 
 scene:addEventListener("create",scene)

@@ -41,7 +41,7 @@ local function showSlideAch()
 --	scene.lineForm2 = display.newLine(frontObject,0,Height*0.4,Width,Height*0.4)
 	--scene.lineForm2:setStrokeColor( 36/255,122/255,191/255, 1 )
 	--scene.lineForm2.strokeWidth = 8
-	scene.info = display.newImageRect(frontObject,"Images/Shapka.png",Width,Height*0.17)
+	scene.info = display.newImageRect(frontObject,"Images/Shapka.png",Width,Height*0.16)
 	scene.info.x = CenterX
 	scene.info.y = CenterY * 0.55
 end
